@@ -23,81 +23,107 @@
 
                 <div class="container-fluid">
                     <div class="rx-form-container mt-5">
-                        <form id="rxForm" class="rx-form" method="POST">
-                            <h2>Add Prescription</h2>
+                   <form id="rxForm" class="rx-form" method="POST">
+    <h2 class="mb-4">Add Prescription</h2>
 
-                            <div class="row">
-                            <?php include 'conn.php'; ?>
+    <?php include 'conn.php'; ?>
 
-                                <!-- Patient Name (Select2) -->
-                                <div class="form-group col-md-6 mb-3">
-                                    <label for="patient_name">Patient Name:</label>
-                                    <select name="patient_name" id="patient_name" class="form-select" required>
-                                        <option value="" disabled selected>Select Patient</option>
-                                        <?php
-                                        $patient_query = mysqli_query($conn, "SELECT patient_id, patient_name FROM patients");
-                                        while ($row = mysqli_fetch_assoc($patient_query)) {
-                                            echo "<option value='" . htmlspecialchars($row['patient_name']) . "'>" . htmlspecialchars($row['patient_name']) . "</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
+    <div class="row">
+        <!-- Patient Name -->
+        <div class="form-group col-md-6 mb-3">
+            <label for="patient_name">Patient Name:</label>
+            <select name="patient_name" id="patient_name" class="form-select" required>
+                <option value="" disabled selected>Select Patient</option>
+                <?php
+                $patient_query = mysqli_query($conn, "SELECT patient_id, patient_name FROM patients");
+                while ($row = mysqli_fetch_assoc($patient_query)) {
+                    echo "<option value='" . htmlspecialchars($row['patient_name']) . "'>" . htmlspecialchars($row['patient_name']) . "</option>";
+                }
+                ?>
+            </select>
+        </div>
 
-                                <div class="form-group col-md-6 mb-3">
-                                    <label for="date">Date:</label>
-                                    <input type="date" name="date" id="date" class="form-control" required>
-                                </div>
+        <!-- Date -->
+        <div class="form-group col-md-6 mb-3">
+            <label for="date">Date:</label>
+            <input type="date" name="date" id="date" class="form-control" required>
+        </div>
 
-                                <div class="form-group col-md-6 mb-3">
-                                    <label for="age">Age:</label>
-                                    <input type="text" name="age" id="age" class="form-control" required>
-                                </div>
+        <!-- Age -->
+        <div class="form-group col-md-6 mb-3">
+            <label for="age">Age:</label>
+            <input type="text" name="age" id="age" class="form-control" required>
+        </div>
 
-                                <div class="form-group col-md-6 mb-3">
-                                    <label for="gender">Gender:</label>
-                                    <select name="gender" id="gender" class="form-control" required>
-                                        <option value="" disabled selected>Select Gender</option>
-                                        <option value="MALE">MALE</option>
-                                        <option value="FEMALE">FEMALE</option>
-                                    </select>
-                                </div>
+        <!-- Gender -->
+        <div class="form-group col-md-6 mb-3">
+            <label for="gender">Gender:</label>
+            <select name="gender" id="gender" class="form-select" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="MALE">MALE</option>
+                <option value="FEMALE">FEMALE</option>
+            </select>
+        </div>
 
-                                <div class="form-group col-md-12 mb-3">
-                                    <label for="address">Address:</label>
-                                    <input type="text" name="address" id="address" class="form-control" required>
-                                </div>
-                                  <!-- Medicine (Select2) -->
-                                  <div class="form-group col-md-12 mb-3">
-                                    <label for="medicine">Medicine:</label>
-                                    <select name="medicine" id="medicine" class="form-select" required>
-                                        <option value="" disabled selected>Select Medicine</option>
-                                        <?php
-                                        $med_query = mysqli_query($conn, "SELECT medicine_name FROM medicines");
-                                        while ($row = mysqli_fetch_assoc($med_query)) {
-                                            echo "<option value='" . htmlspecialchars($row['medicine_name']) . "'>" . htmlspecialchars($row['medicine_name']) . "</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-12 mb-3">
-                                    <label for="diagnosis">Diagnosis:</label>
-                                    <textarea name="diagnosis" id="diagnosis" class="form-control" rows="3" required></textarea>
-                                </div>
+        <!-- Address -->
+        <div class="form-group col-md-12 mb-3">
+            <label for="address">Address:</label>
+            <input type="text" name="address" id="address" class="form-control" required>
+        </div>
 
-                                <div class="form-group col-md-12 mb-3">
-                                    <label for="prescription">Prescription (RX):</label>
-                                    <textarea name="prescription" id="prescription" class="form-control" rows="3" required></textarea>
-                                </div>
+        <!-- Diagnosis -->
+        <div class="form-group col-md-12 mb-4">
+            <label for="diagnosis">Diagnosis:</label>
+            <textarea name="diagnosis" id="diagnosis" class="form-control" rows="3" required></textarea>
+        </div>
 
-                                <div class="form-group col-md-12 mt-3">
-                                    <button type="submit" class="btn btn-primary">Submit Prescription</button>
-                                </div>
+        <!-- Prescription Table -->
+        <div class="form-group col-md-12">
+            <label class="form-label fw-bold">Prescriptions</label>
+            <table class="table table-bordered" id="prescriptionTable">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Medicine</th>
+                        <th>Prescription (RX)</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="prescriptionBody">
+                    <tr>
+                        <td class="text-center">1</td>
+                        <td>
+                            <select name="medicine[]" class="form-select medicine-select" required>
+                                <option value="" disabled selected>Select Medicine</option>
+                                <?php
+                                $med_query = mysqli_query($conn, "SELECT medicine_name FROM medicines");
+                                while ($row = mysqli_fetch_assoc($med_query)) {
+                                    echo "<option value='" . htmlspecialchars($row['medicine_name']) . "'>" . htmlspecialchars($row['medicine_name']) . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </td>
+                        <td><input type="text" name="prescription[]" class="form-control" required></td>
+                        <td><input type="number" name="quantity[]" class="form-control" min="1" required></td>
+                        <td class="text-center"><button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-                                <div class="form-group col-md-12 mt-2 text-center">
+        <!-- Action Buttons in One Row -->
+        <div class="form-group col-md-12 mt-3 button-group-row">
+    <button type="button" class="btn btn-success" id="addRow">Add Prescription</button>
+    <button type="submit" class="btn btn-primary">Submit Prescription</button>
+  
+</div>
+<div class="form-group col-md-12 mt-2 text-center">
                                     <button type="button" class="btn btn-secondary" onclick="printRX()">🖨️ Print Prescription</button>
                                 </div>
-                            </div>
-                        </form>
+    </div>
+</form>
+
                     </div>
                     <?php include('includes/footer.php'); ?>
                 </div>
@@ -162,8 +188,53 @@
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
                 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
                 <script>
+  $(document).ready(function () {
+    let rowCount = 1;
+
+    function initializeSelect2() {
+        $('.medicine-select').select2({
+            theme: "bootstrap-5",
+            width: '100%'
+        });
+    }
+
+    initializeSelect2();
+
+    $('#addRow').on('click', function () {
+        rowCount++;
+        let newRow = `
+        <tr>
+            <td class="text-center">${rowCount}</td>
+            <td>
+                <select name="medicine[]" class="form-select medicine-select" required>
+                    <option value="" disabled selected>Select Medicine</option>
+                    <?php
+                    $med_query = mysqli_query($conn, "SELECT medicine_name FROM medicines");
+                    while ($row = mysqli_fetch_assoc($med_query)) {
+                        echo "<option value='" . htmlspecialchars($row['medicine_name']) . "'>" . htmlspecialchars($row['medicine_name']) . "</option>";
+                    }
+                    ?>
+                </select>
+            </td>
+            <td><input type="text" name="prescription[]" class="form-control" required></td>
+            <td><input type="number" name="quantity[]" class="form-control" min="1" required></td>
+            <td class="text-center"><button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button></td>
+        </tr>`;
+        $('#prescriptionBody').append(newRow);
+        initializeSelect2();
+    });
+
+    $(document).on('click', '.remove-btn', function () {
+        $(this).closest('tr').remove();
+        rowCount = 1;
+        $('#prescriptionBody tr').each(function () {
+            $(this).find('td:first').text(rowCount++);
+        });
+    });
+});
                     $(document).ready(function() {
                         // Initialize Select2 for Patient Name
                         $('.patient_name').select2({
@@ -256,7 +327,6 @@
                             }
                         });
                     });
-
                     function printRX() {
     let patientName = '';
     let medicine = '';
@@ -282,12 +352,34 @@
     const gender = document.getElementById('gender').value;
     const address = document.getElementById('address').value;
     const diagnosis = document.getElementById('diagnosis').value;
-    const prescription = document.getElementById('prescription').value;
 
-    if (!patientName || !date || !age || !gender || !address || !diagnosis || !prescription) {
-        Swal.fire('Error!', 'Please fill in all required fields before printing.', 'error');
-        return;
+    let prescriptionsHTML = '<div style="display: flex; flex-direction: column; gap: 6px;">';
+
+$('#prescriptionTable tbody tr').each(function(index) {
+    const med = $(this).find('select[name="medicine[]"] option:selected').text().trim();
+    const rx = $(this).find('input[name="prescription[]"]').val().trim();
+    const qty = $(this).find('input[name="quantity[]"]').val().trim();
+
+    if (med && rx && qty) {
+        prescriptionsHTML += `
+            <div style="display: flex; justify-content: space-between;">
+                <div style="font-weight: bold;">${med}</div>
+                <div>${qty}</div>
+            </div>
+            <div style="margin-left: 10px;">Sig: ${rx}</div>
+        `;
     }
+});
+
+prescriptionsHTML += '</div>';
+
+
+
+if (!patientName || !date || !age || !gender || !address || !diagnosis || prescriptionsHTML.trim() === '') {
+    Swal.fire('Error!', 'Please fill in all required fields before printing.', 'error');
+    return;
+}
+
 
     const formattedDate = new Date(date).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -295,7 +387,7 @@
         day: 'numeric'
     });
 
-    const printWindow = window.open('', '_blank', 'width=600,height=800');
+    const printWindow = window.open('', '_blank', 'width=800,height=1000');
     printWindow.document.write(`
 <!DOCTYPE html>
 <html>
@@ -303,145 +395,253 @@
     <title>Prescription</title>
     <style>
         @page {
-            size: 8.5in 5.5in;
-            margin: 0;
+            size: 4in 6in;
+            margin: 0.1in;
         }
         body {
             font-family: Arial, sans-serif;
             font-size: 12px;
             margin: 0;
             padding: 0;
+            line-height: 1.4;
         }
         .container {
             border: 2px solid black;
-            margin: 10px;
-            padding: 15px;
-            height: calc(100% - 20px);
+            padding: 8px;
+            height: calc(100vh - 16px);
             box-sizing: border-box;
         }
         .header {
             display: flex;
-            justify-content: space-between;
             align-items: flex-start;
+            margin-bottom: 15px;
         }
-        .logo {
+        .logo-section {
             display: flex;
-            gap: 8px;
+            gap: 10px;
+            margin-right: 20px;
         }
-        .logo img {
-            height: 45px;
+        .logo-section img {
+            height: 35px;
+            width: auto;
         }
         .doctor-info {
-            text-align: center;
             flex: 1;
+            text-align: center;
         }
-        .doctor-info .name {
-            font-size: 14px;
+        .doctor-name {
+            font-size: 10px;
             font-weight: bold;
+            margin-bottom: 2px;
         }
-        .doctor-info .spec {
-            font-size: 11px;
+        .doctor-specialty {
+            font-size: 9px;
+            margin-bottom: 8px;
         }
         .clinic-name {
-            font-size: 13px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        .clinic-info {
             font-size: 11px;
-            line-height: 1.3;
-            margin-bottom: 8px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            clear: both;
+        }
+        .clinic-address {
+            font-size: 8px;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .clinic-contact {
+            font-size: 8px;
+            margin-bottom: 10px;
         }
         .divider {
             border-top: 2px solid black;
-            margin: 10px 0;
+            margin: 8px 0;
         }
-        .patient-info {
-            font-size: 12px;
-            margin-bottom: 10px;
+        .patient-section {
+            margin-bottom: 8px;
         }
-        .patient-info div {
-            margin: 5px 0;
+        .patient-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-size: 9px;
         }
-        .rx {
-            font-size: 28px;
+        .patient-field {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        .field-label {
+            font-weight: normal;
+            margin-right: 3px;
+        }
+        .field-value {
+            border-bottom: 1px solid black;
+            flex: 1;
+            padding-bottom: 1px;
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .patient-field:last-child .field-value {
+            margin-right: 0;
+        }
+        .diagnosis-row {
+            margin-bottom: 8px;
+        }
+        .diagnosis-field {
+            display: flex;
+            align-items: center;
+            font-size: 9px;
+        }
+        .diagnosis-value {
+            border-bottom: 1px solid black;
+            flex: 1;
+            padding-bottom: 1px;
+            margin-left: 3px;
+        }
+        .rx-symbol {
+            font-size: 24px;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 8px 0;
+            font-family: serif;
         }
-        .prescription-box {
-            min-height: 90px;
-            border: 1px solid #000;
-            padding: 10px;
-            margin: 10px 0;
+        .prescription-area {
+            min-height: 120px;
+            margin-bottom: 20px;
             white-space: pre-wrap;
+            font-size: 9px;
+            line-height: 1.4;
         }
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            text-align: right;
+        .footer-section {
+            position: absolute;
+            bottom: 20px;
+            right: 8px;
+            text-align: center;
+            font-size: 8px;
         }
-        .footer .name {
+        .doctor-signature {
             font-weight: bold;
-            margin-bottom: 6px;
+            font-size: 9px;
+            margin-bottom: 8px;
         }
-        .footer-line {
-            display: block;
-            border-bottom: 1px solid #000;
-            width: 220px;
+        .license-info {
+            text-align: left;
+            line-height: 1.4;
+        }
+        .license-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+        .license-label {
+            width: 40px;
+            text-align: left;
+            font-size: 7px;
+        }
+        .license-line {
+            border-bottom: 1px solid black;
+            width: 80px;
+            height: 12px;
             margin-left: 5px;
             display: inline-block;
-        }
-        .footer-line.text-center {
             text-align: center;
+            padding-top: 1px;
+            font-size: 7px;
+        }
+        .signature-border {
+            border: 1px solid black;
+            padding: 8px;
+            margin-top: 10px;
+        }
+        @media print {
+            .container {
+                height: auto;
+                min-height: 100vh;
+            }
+            .footer-section {
+                position: fixed;
+                bottom: 0.2in;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo">
-                <img src="http://localhost/gmc_rx/img/AdminLTELogo.png" alt="Logo 1">
-                <img src="http://localhost/gmc_rx/img/alagang.png" alt="Logo 2">
+            <div class="logo-section">
+                <img src="http://localhost/gmc_rx/img/AdminLTELogo.png" alt="GMC Logo">
+                <img src="http://localhost/gmc_rx/img/alagang.png" alt="Alagang Logo">
             </div>
             <div class="doctor-info">
-                <div class="name">MARIA JANINA L. PAJARO-LORICO, MD, DPDS</div>
-                <div class="spec">CLINICAL & COSMETIC DERMATOLOGY</div>
+                <div class="doctor-name">MARIA JANINA L. PAJARO-LORICO, MD, DPDS</div>
+                <div class="doctor-specialty">CLINICAL & COSMETIC DERMATOLOGY</div>
             </div>
         </div>
 
         <div class="clinic-name">Gensan Medical Center</div>
-        <div class="clinic-info">
+        <div class="clinic-address">
             National Highway, Purok Veterans, Barangay Calumpang<br>
-            City of General Santos City, South Cotabato<br>
+            City of General Santos City<br>
+            South Cotabato
+        </div>
+        <div class="clinic-contact">
             Tel. #: (083)878-4942 || 228-5000<br>
             Mobile #: (+63)950-287-4792 || (+63)916-519-1372
         </div>
 
         <div class="divider"></div>
 
-        <div class="patient-info">
-            <div><strong>Name:</strong> ${patientName} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Date:</strong> ${formattedDate}</div>
-            <div><strong>Address:</strong> ${address} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Age/Gender:</strong> ${age} / ${gender}</div>
-            <div><strong>Diagnosis:</strong> ${diagnosis}</div>
+        <div class="patient-section">
+            <div class="patient-row">
+                <div class="patient-field">
+                    <span class="field-label">Name:</span>
+                    <span class="field-value">${patientName}</span>
+                </div>
+                <div class="patient-field">
+                    <span class="field-label">Date:</span>
+                    <span class="field-value">${formattedDate}</span>
+                </div>
+            </div>
+            <div class="patient-row">
+                <div class="patient-field">
+                    <span class="field-label">Address:</span>
+                    <span class="field-value">${address}</span>
+                </div>
+                <div class="patient-field">
+                    <span class="field-label">Age/Gender:</span>
+                    <span class="field-value">${age} / ${gender}</span>
+                </div>
+            </div>
+            <div class="diagnosis-row">
+                <div class="diagnosis-field">
+                    <span class="field-label">Diagnosis:</span>
+                    <span class="diagnosis-value">${diagnosis}</span>
+                </div>
+            </div>
         </div>
 
-        <div class="rx">Rx</div>
+        <div class="rx-symbol">℞</div>
 
-        <div class="prescription-box">${prescription}</div>
+       <div class="prescription-area">${prescriptionsHTML}</div>
 
-        <div class="footer">
-            <div class="name">MARIA JANINA L. PAJARO-LORICO, MD, DPDS</div>
-            <div>
-                Lic. No. 
-                <span class="footer-line text-center"><strong>103714</strong></span>
-            </div>
-            <div>
-                PTR No. 
-                <span class="footer-line"></span>
-            </div>
-            <div>
-                S₂ No. 
-                <span class="footer-line"></span>
+
+        <div class="footer-section">
+          
+                <div class="doctor-signature">MARIA JANINA L. PAJARO-LORICO, MD, DPDS</div>
+                <div class="license-info">
+                    <div class="license-row">
+                        <span class="license-label">Lic. No.</span>
+                        <span class="license-line"><strong>103714</strong></span>
+                    </div>
+                    <div class="license-row">
+                        <span class="license-label">PTR No.</span>
+                        <span class="license-line"></span>
+                    </div>
+                    <div class="license-row">
+                        <span class="license-label">S₂No.</span>
+                        <span class="license-line"></span>
+                    </div>
+                
             </div>
         </div>
     </div>
@@ -484,6 +684,8 @@
                     });
 
                 </script>
+   
+
 </body>
 
 </html>
