@@ -122,6 +122,7 @@
 </div>
 
     </div>
+                            </div>
 </form>
 
                     </div>
@@ -169,7 +170,10 @@
                         </div>
                     </div>
 
-                    <div class="rx-symbol">℞</div>
+                    <div class="rx-symbol">
+    <img src="http://localhost/gmc_rx/img/rx1.png" alt="rxLogo" class="rx-image">
+</div>
+
 
                     <div class="prescription-content" id="print-prescription-content">
                     </div>
@@ -563,15 +567,32 @@ if (!patientName || !date || !age || !gender || !address || !diagnosis || prescr
                 bottom: 0.2in;
             }
         }
+            .rx-symbol {
+            margin-top: 20px;
+            text-align: left; /* or center depending on your layout */
+        }
+
+        .rx-symbol img.rx-image {
+            width: 40px; /* adjust as needed */
+            height: auto;
+        }
+.alagang-logo {
+    width: 200px;  /* You can increase to 180px, 200px, etc. */
+    height: auto;
+}
+
+
+            
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo-section">
+           <div class="logo-section">
                 <img src="http://localhost/gmc_rx/img/AdminLTELogo.png" alt="GMC Logo">
-                <img src="http://localhost/gmc_rx/img/alagang.png" alt="Alagang Logo">
+                <img src="http://localhost/gmc_rx/img/alagang.png" alt="Alagang Logo" class="alagang-logo">
             </div>
+
             <div class="doctor-info">
                 <div class="doctor-name">MARIA JANINA L. PAJARO-LORICO, MD, DPDS</div>
                 <div class="doctor-specialty">CLINICAL & COSMETIC DERMATOLOGY</div>
@@ -620,7 +641,10 @@ if (!patientName || !date || !age || !gender || !address || !diagnosis || prescr
             </div>
         </div>
 
-        <div class="rx-symbol">℞</div>
+        <div class="rx-symbol">
+    <img src="http://localhost/gmc_rx/img/rx1.png" alt="rxLogo" class="rx-image">
+</div>
+
 
        <div class="prescription-area">${prescriptionsHTML}</div>
 

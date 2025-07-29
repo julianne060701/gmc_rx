@@ -33,9 +33,10 @@
                             <tr>
                                 <th>Medicine Name</th>
                                 <th>Type</th>
-                                <th>Dosage</th>
+                                <th>Action</th>
+                                <!-- <th>Dosage</th>
                                 <th>Stock</th>
-                                <th>Expiry Date</th>
+                                <th>Expiry Date</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -50,9 +51,14 @@
                                     echo "<tr>";
                                     echo "<td>" . htmlspecialchars($row['medicine_name']) . "</td>";
                                     echo "<td>" . htmlspecialchars($row['type']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($row['dosage']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($row['stock']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($row['expiry_date']) . "</td>";
+                                    echo "<td>
+                                            <button class='btn btn-sm btn-primary editBtn'
+                                                data-id='" . $row['id'] . "'
+                                                data-name='" . htmlspecialchars($row['medicine_name'], ENT_QUOTES) . "'
+                                                data-type='" . htmlspecialchars($row['type'], ENT_QUOTES) . "'>
+                                                <i class='fas fa-edit'></i>
+                                            </button>
+                                        </td>";
                                     echo "</tr>";
                                 }
                             } else {
@@ -67,7 +73,7 @@
             </div>
         </div>
     </div>
-
+                        </div>
     <?php include('includes/footer.php'); ?>
 </div>
 
@@ -92,7 +98,7 @@
                         <label>Type</label>
                         <input type="text" name="type" class="form-control" required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label>Dosage</label>
                         <input type="text" name="dosage" class="form-control" required>
                     </div>
@@ -103,11 +109,43 @@
                     <div class="form-group">
                         <label>Expiry Date</label>
                         <input type="date" name="expiry_date" class="form-control" required>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Add Medicine</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Edit Medicine Modal -->
+<div class="modal fade" id="editMedicineModal" tabindex="-1" role="dialog" aria-labelledby="editMedicineModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="editMedicineForm" action="edit_medicine.php" method="POST">
+            <input type="hidden" name="id" id="editId">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Medicine</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Medicine Name</label>
+                        <input type="text" name="medicine_name" id="editName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <input type="text" name="type" id="editType" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Update Medicine</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
@@ -134,6 +172,23 @@
             }
         });
     });
+</script>
+<script>
+document.querySelectorAll('.editBtn').forEach(button => {
+    button.addEventListener('click', function () {
+        const id = this.dataset.id;
+        const name = this.dataset.name;
+        const type = this.dataset.type;
+
+        // Fill modal inputs
+        document.getElementById('editId').value = id;
+        document.getElementById('editName').value = name;
+        document.getElementById('editType').value = type;
+
+        // Show modal
+        $('#editMedicineModal').modal('show');
+    });
+});
 </script>
 
 </body>
