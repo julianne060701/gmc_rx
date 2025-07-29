@@ -1,3 +1,5 @@
+<?php include('auth.php'); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -116,11 +118,9 @@
         <div class="form-group col-md-12 mt-3 button-group-row">
     <button type="button" class="btn btn-success" id="addRow">Add Prescription</button>
     <button type="submit" class="btn btn-primary">Submit Prescription</button>
-  
+    <button type="button" class="btn btn-secondary" onclick="printRX()">🖨️ Print Prescription</button>
 </div>
-<div class="form-group col-md-12 mt-2 text-center">
-                                    <button type="button" class="btn btn-secondary" onclick="printRX()">🖨️ Print Prescription</button>
-                                </div>
+
     </div>
 </form>
 
